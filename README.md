@@ -18,5 +18,5 @@ export INFER_METHOD=hcp_meinamix
 Run
 
 ```shell
-python app.py
+accelerate launch app.py
 ```
