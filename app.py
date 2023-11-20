@@ -69,13 +69,13 @@ if __name__ == '__main__':
         def _prompt_submit(uuid_, prompt):
             exists, qid = _QUESTION_SESSIONS[uuid_]
             _, qs = ALL_QS[qid]
-            correct, image, explanation = qs.run(prompt, neg_prompt=None)
+            correct, image, explanation, extra_images = qs.run(prompt, neg_prompt=None)
             if correct:
                 exists.add(qid)
                 _QUESTION_SESSIONS[uuid_] = (exists, qid)
 
             cm = {'Correct': 1.0 if correct else 0.0, 'Wrong': 0.0 if correct else 1.0}
-            return cm, [image], explanation
+            return cm, [(image, 'Output'), *((img, t) for t, img in extra_images)], explanation
 
 
         gr_submit.click(

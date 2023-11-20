@@ -23,13 +23,15 @@ class Question:
 
         return infer_with_prompt(os.environ['INFER_METHOD'], prompt, neg_prompt)
 
-    def check(self, prompt: str, neg_prompt: Optional[str], image: Image.Image) -> Tuple[bool, str]:
+    def check(self, prompt: str, neg_prompt: Optional[str], image: Image.Image) \
+            -> Tuple[bool, str, List[Tuple[str, Image.Image]]]:
         raise NotImplementedError
 
-    def run(self, prompt: str, neg_prompt: Optional[str] = None) -> Tuple[bool, Image.Image, str]:
+    def run(self, prompt: str, neg_prompt: Optional[str] = None) \
+            -> Tuple[bool, Image.Image, str, List[Tuple[str, Image.Image]]]:
         image = self.infer(prompt, neg_prompt)
-        correct, explanation_md = self.check(prompt, neg_prompt, image)
-        return correct, image, explanation_md
+        correct, explanation_md, extra_images = self.check(prompt, neg_prompt, image)
+        return correct, image, explanation_md, extra_images
 
 
 _ALL_QUESTIONS: Dict[Tuple[int, ...], Tuple[str, Question]] = {}

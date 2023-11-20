@@ -2,34 +2,32 @@ import os.path
 import textwrap
 from typing import Optional, Tuple, List
 
-import numpy as np
 from PIL import Image
-from imgutils.metrics import ccip_batch_same
+from imgutils.detect import detect_faces, detection_visualize
 
 from ..question import Question, register_question
 
 feat_file = os.path.join(os.path.dirname(__file__), 'character_feature.npy')
 
 
-class TohsakaRinQuestion(Question):
+class Faces2Question(Question):
     def __init__(self):
         Question.__init__(
             self,
             question_md=textwrap.dedent("""
-                Draw image for tohsaka rin
+                Draw images with 2 faces
             """).strip(),
             neg_prompt_required=False,
         )
 
-        self.feats = [item for item in np.load(feat_file)]
-
     def check(self, prompt: str, neg_prompt: Optional[str], image: Image.Image) \
             -> Tuple[bool, str, List[Tuple[str, Image.Image]]]:
-        score = ccip_batch_same([image, *self.feats])[0, 1:].mean()
-        if score >= 0.8:
-            return True, f'Yes she is tohsaka rin (score: {score:.2f})', []
+        detection = detect_faces(image)
+        visual = detection_visualize(image, detection)
+        if len(detection) == 2:
+            return True, '2 Faces Detected', [('Detection', visual)]
         else:
-            return False, f'I don\'t think she is tohsaka rin (socre: {score:.2f})', []
+            return True, f'2 Faces Expected, But {len(detection)} Found.', [('Detection', visual)]
 
 
-register_question((1, 1), 'Tohsaka Rin', TohsakaRinQuestion())
+register_question((1, 2), '2 Faces', Faces2Question())
