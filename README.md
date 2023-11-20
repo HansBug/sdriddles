@@ -9,6 +9,12 @@ pip install -r requirements.txt
 make init
 ```
 
+Set infer method
+
+```shell
+export INFER_METHOD=hcp_meinamix
+```
+
 Run
 
 ```shell
