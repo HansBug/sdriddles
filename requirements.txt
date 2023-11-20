@@ -1,0 +1,10 @@
+hbutils>=0.9.3
+hcpdiff>=0.6.2
+dghs-imgutils>=0.2.10
+torch~=2.0.1
+numpy
+scipy
+pandas
+tqdm
+di-toolkit
+gradio>=4.0.0
